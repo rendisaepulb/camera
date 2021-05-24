@@ -37,6 +37,7 @@ import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.os.SystemClock;
 import android.util.Range;
 import android.util.Rational;
 import android.util.Size;
@@ -73,6 +74,9 @@ interface ErrorCallback {
 public class Camera {
   private static final String TAG = "Camera";
 
+  /** Timeout for the pre-capture sequence. */
+  private static final long PRECAPTURE_TIMEOUT_MS = 1000;
+
   private final SurfaceTextureEntry flutterTexture;
   private final CameraManager cameraManager;
   private final DeviceOrientationManager deviceOrientationListener;
@@ -105,6 +109,7 @@ public class Camera {
   private boolean useAutoFocus = true;
   private Range<Integer> fpsRange;
   private PlatformChannel.DeviceOrientation lockedCaptureOrientation;
+  private long preCaptureStartTime;
 
   private static final HashMap<String, Integer> supportedImageFormats;
   // Current supported outputs
