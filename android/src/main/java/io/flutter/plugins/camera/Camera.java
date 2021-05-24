@@ -106,7 +106,7 @@ public class Camera {
   private PictureCaptureRequest pictureCaptureRequest;
   private CameraRegions cameraRegions;
   private int exposureOffset;
-  private boolean useAutoFocus = false;
+  private boolean useAutoFocus = true;
   private Range<Integer> fpsRange;
   private PlatformChannel.DeviceOrientation lockedCaptureOrientation;
   private long preCaptureStartTime;
