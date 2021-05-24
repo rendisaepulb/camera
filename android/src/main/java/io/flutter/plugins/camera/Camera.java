@@ -503,11 +503,16 @@ public class Camera {
                   || aeState == CaptureRequest.CONTROL_AE_STATE_FLASH_REQUIRED
                   || aeState == CaptureRequest.CONTROL_AE_STATE_CONVERGED) {
                 pictureCaptureRequest.setState(State.waitingPreCaptureReady);
+                setPreCaptureStartTime();
               }
               break;
             case waitingPreCaptureReady:
               if (aeState == null || aeState != CaptureRequest.CONTROL_AE_STATE_PRECAPTURE) {
                 runPictureCapture();
+              } else {
+                if (hitPreCaptureTimeout()) {
+                  unlockAutoFocus();
+                }
               }
           }
         }
@@ -1140,6 +1145,20 @@ public class Camera {
       imageStreamReader.setOnImageAvailableListener(null, null);
     }
     startPreview();
+  }
+
+  /** Sets the time the pre-capture sequence started. */
+  private void setPreCaptureStartTime() {
+    preCaptureStartTime = SystemClock.elapsedRealtime();
+  }
+
+  /**
+   * Check if the timeout for the pre-capture sequence has been reached.
+   *
+   * @return true if the timeout is reached; otherwise false is returned.
+   */
+  private boolean hitPreCaptureTimeout() {
+    return (SystemClock.elapsedRealtime() - preCaptureStartTime) > PRECAPTURE_TIMEOUT_MS;
   }
 
   private void closeCaptureSession() {
