@@ -106,7 +106,7 @@ public class Camera {
   private PictureCaptureRequest pictureCaptureRequest;
   private CameraRegions cameraRegions;
   private int exposureOffset;
-  private boolean useAutoFocus = true;
+  private boolean useAutoFocus = false;
   private Range<Integer> fpsRange;
   private PlatformChannel.DeviceOrientation lockedCaptureOrientation;
   private long preCaptureStartTime;
@@ -430,11 +430,13 @@ public class Camera {
         },
         null);
 
-    if (useAutoFocus) {
-      runPictureAutoFocus();
-    } else {
-      runPicturePreCapture();
-    }
+    // if (useAutoFocus) {
+    //   runPictureAutoFocus();
+    // } else {
+      // runPicturePreCapture();
+    // }
+
+    runPicturePreCapture();
   }
 
   private final CameraCaptureSession.CaptureCallback pictureCaptureCallback =
@@ -516,7 +518,7 @@ public class Camera {
                 runPictureCapture();
               } else {
                 if (hitPreCaptureTimeout()) {
-                  unlockAutoFocus();
+                  runPictureCapture();
                 }
               }
           }
